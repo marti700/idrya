@@ -35,8 +35,12 @@ object MainScene extends scalafx.scene.Scene {
       val editEntryButton = new Button("Edit")
       val deleteEntryButton = new Button("Delete")
 
-      //define Event Handlers for the buttons
+      //DEFINE EVENT HANDLERS FOR THE BUTTONS
+      //event handler for the add entry button
       addEntryButton.onAction = (e:ActionEvent) => {Idrya.stage.scene = AddEntryScreen}
+
+      //define Event handler for the edit entry button
+      editEntryButton.onAction = (e:ActionEvent) => {Idrya.stage.scene = EditEntryScreen}
 
       //add the buttons to the HBox pane by calling children_ (which is a setter)
       children = List(addEntryButton,editEntryButton,deleteEntryButton)

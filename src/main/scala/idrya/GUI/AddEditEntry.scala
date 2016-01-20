@@ -1,4 +1,4 @@
-package IdryaGUI
+package idrya.GUI
 
 import scalafx.application.JFXApp
 import scalafx.scene.Scene
@@ -6,6 +6,7 @@ import scalafx.scene.control.Button
 import scalafx.scene.control.Label
 import scalafx.scene.control.TextField
 import scalafx.scene.control.TextArea
+import scalafx.scene.web.HTMLEditor
 import scalafx.scene.layout.HBox
 import scalafx.scene.layout.VBox
 import scalafx.scene.layout.BorderPane
@@ -51,5 +52,7 @@ class AddEditEntry extends scalafx.scene.Scene{
     }
   }
   //***************************SCREEN MAIN CONTAINER END**********************//
+
+  //sets the BorderPane as the root element in this stage
   root = mainContainer
 }

@@ -1,4 +1,4 @@
-package IdryaGUI
+package idrya.GUI
 
 import scalafx.application.JFXApp
 import scalafx.scene.Scene

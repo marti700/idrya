@@ -35,7 +35,7 @@ class AddEditEntry extends scalafx.scene.Scene{
   val titleTextField = new TextField
   //in this text area goes the content of the entry
   val entryContentWebView = new WebView{
-    engine.load("file:///home/teodoro/Desktop/overlay2.html")
+    engine.load("file:////home/teodoro/Documents/Projects/ScalaProjects/Idrya/src/resources/editor/html/editor.html")
     engine.onAlert = (e: WebEvent[_]) => {println(e.data)}
   }
   //*****************************SCREEN CONTROLS END**************************//

@@ -7,6 +7,8 @@ import scalafx.scene.control.Label
 import scalafx.scene.control.TextField
 import scalafx.scene.control.TextArea
 import scalafx.scene.web.HTMLEditor
+import scalafx.scene.web.WebView
+import scalafx.scene.web.WebEvent
 import scalafx.scene.layout.HBox
 import scalafx.scene.layout.VBox
 import scalafx.scene.layout.BorderPane
@@ -32,7 +34,10 @@ class AddEditEntry extends scalafx.scene.Scene{
   //in this text field goes the title of the entry
   val titleTextField = new TextField
   //in this text area goes the content of the entry
-  val entryContentTextArea = new TextArea
+  val entryContentWebView = new WebView{
+    engine.load("file:///home/teodoro/Desktop/overlay2.html")
+    engine.onAlert = (e: WebEvent[_]) => {println(e.data)}
+  }
   //*****************************SCREEN CONTROLS END**************************//
   //*************************SCREEN MAIN CONTAINER***************************//
   val mainContainer = new BorderPane{
@@ -48,7 +53,7 @@ class AddEditEntry extends scalafx.scene.Scene{
     center = new VBox {
       spacing = 10
         //adds controls to the VBox pane
-        children = List(titleLabel, titleTextField, entryContentTextArea)
+        children = List(titleLabel, titleTextField, entryContentWebView)
     }
   }
   //***************************SCREEN MAIN CONTAINER END**********************//

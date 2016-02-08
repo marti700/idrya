@@ -19,6 +19,16 @@ import scalafx.beans.property.StringProperty
 import scalafx.beans.property.ObjectProperty
 import scalafx.Includes._
 import scalafx.event.ActionEvent
+import netscape.javascript.JSObject
+import idrya.check.spell.SpellChecker
+
+//bridge class to comunicate this class with the SpellChecker class
+//this is temparary, is just to ensure that the javascript in the WebView
+//can comuticate with the SpellChecker
+class AddEditEntrySpellCheckerBridge(){
+  val checker = new SpellChecker()
+  def suggestions(aWord:String):List[String] = {checker.getSuggestions(checker.generateMisspellings(checker.dic),checker.dic,aWord)}
+}
 
 class AddEditEntry extends scalafx.scene.Scene{
 
@@ -38,6 +48,12 @@ class AddEditEntry extends scalafx.scene.Scene{
     engine.load("file:////home/teodoro/Documents/Projects/ScalaProjects/Idrya/src/resources/editor/html/editor.html")
     engine.onAlert = (e: WebEvent[_]) => {println(e.data)}
   }
+  //prepare entryContentWebView to call scala methods in the context of
+  //the DOM window
+  var win = entryContentWebView.getEngine().executeScript("window").asInstanceOf[JSObject]
+  //set checker as a member of the window so it can be called in
+  //javascript as checker.method
+  win.setMember("checker", new AddEditEntrySpellCheckerBridge())
   //*****************************SCREEN CONTROLS END**************************//
   //*************************SCREEN MAIN CONTAINER***************************//
   val mainContainer = new BorderPane{

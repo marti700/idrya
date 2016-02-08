@@ -1,4 +1,4 @@
-name := "myproject"
+name := "Idrya"
 
 scalaVersion := "2.11.7"
 

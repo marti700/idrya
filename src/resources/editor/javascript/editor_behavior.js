@@ -33,7 +33,9 @@ window.onload = function(){
             console.log(this);
             console.log(Array.prototype.indexOf.call(d.childNodes,this));
             //alert(document.body.innerHTML);
-            alert(this.innerHTML);
+            alert(checker.suggestions(this.innerHTML)) //checker is a scala object from idrya.check.spell.SpellChecker
+            //alert(checker.getSuggestions(checker.generateMisspellings(checker.dic),checker.dic,this.innerHTML)
+            //alert(this.innerHTML);
         }
 
         //if the caret (the blinking thing from where the words suddenly appear)

@@ -10,6 +10,7 @@ unmanagedJars in Compile += {
 
 libraryDependencies ++= Seq(
   "org.scalafx" %% "scalafx" % "8.0.60-R9",
-  "org.scala-lang.modules" %% "scala-xml" % "1.0.5"
+  "org.scala-lang.modules" %% "scala-xml" % "1.0.5",
+  "net.liftweb" %% "lift-json" % "2.6+"
 )
 

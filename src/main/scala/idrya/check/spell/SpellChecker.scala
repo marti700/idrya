@@ -1,5 +1,7 @@
 import scala.collection.immutable.Map
 import scala.collection.immutable.List
+import net.liftweb.json._
+import net.liftweb.json.Serialization.write
 
 package idrya.check.spell {
   class SpellChecker{
@@ -71,6 +73,12 @@ package idrya.check.spell {
       // return a list of strings with posible spelling corrections
       // without duplicates
       (suggestions ++ moreSuggestions.flatten).distinct
+    }
+
+    def suggestionsToJson(input:String):String = {
+      implicit val formats = net.liftweb.json.DefaultFormats
+      val suggestions = write(getSuggestions(generateMisspellings(dic),dic,input))
+      suggestions
     }
   }
 }

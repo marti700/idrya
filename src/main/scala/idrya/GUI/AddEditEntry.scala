@@ -27,7 +27,7 @@ import idrya.check.spell.SpellChecker
 //can comuticate with the SpellChecker
 class AddEditEntrySpellCheckerBridge(){
   val checker = new SpellChecker()
-  def suggestions(aWord:String):List[String] = {checker.getSuggestions(checker.generateMisspellings(checker.dic),checker.dic,aWord)}
+  def suggestions(aWord:String):String = {checker.suggestionsToJson(aWord)}
 }
 
 class AddEditEntry extends scalafx.scene.Scene{

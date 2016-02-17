@@ -4,16 +4,23 @@ function getSelectionStart() {
     return (node.nodeType == 3 ? node.parentNode : node);
 }
 
-function createContextMenu(menuElements,coordinates){
+function createContextMenu(menuElements,coordinates,aSpan){
     var menuContainer = document.createElement('nav');
     var menu = document.createElement('ul');
 
     //Add elements to conext menu
-    for(var menuElement of menuElements){
-        var element = document.createElement('li');
-        element.innerHTML = menuElement
-        menu.appendChild(element);
-    }
+    for(var menuElement of menuElements)
+        //because of the problem of clojures and loops
+        //see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures#Creating_closures_in_loops_A_common_mistake
+        //a immediate function is used to correct it, so that when the user
+        //clicks an option of the context menu the word is replaced correclty.
+        (function(i){
+            var element = document.createElement('li');
+            element.innerHTML = menuElement;
+            //add a click event to replace the word in the span with a word of the context menu
+            element.onclick = function() {aSpan.innerHTML = i;}
+            menu.appendChild(element);
+        }(menuElement));
 
     menuContainer.appendChild(menu);
     //set the position of the menu;
@@ -64,7 +71,7 @@ window.onload = function(){
                 //alert(createContextMenu(["What","The","Fuck"],{x: evt.clientX, y: evt.clientY}).style.position);
                 //alert(typeof json.parse(h) === String);
 
-                document.getElementById("editor").appendChild(createContextMenu(JSON.parse(suggestions),{x: evt.clientX, y: evt.clientY}));
+                document.getElementById("editor").appendChild(createContextMenu(JSON.parse(suggestions),{x: evt.clientX, y: evt.clientY},this));
                 //alert(checker.getSuggestions(checker.generateMisspellings(checker.dic),checker.dic,this.innerHTML)
                 //alert(this.innerHTML);
             }

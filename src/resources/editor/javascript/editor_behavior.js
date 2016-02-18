@@ -1,11 +1,20 @@
 "use strict";
+//get the caret position
 function getSelectionStart() {
     var node = document.getSelection().anchorNode;
     return (node.nodeType == 3 ? node.parentNode : node);
 }
 
+//deletes the context menu from the DOM
+function deleteContextMenu(){
+    var parent = document.getElementById('editor');
+    var child = document.getElementById('contextMenu');
+    parent.removeChild(child);
+}
+
 function createContextMenu(menuElements,coordinates,aSpan){
     var menuContainer = document.createElement('nav');
+    menuContainer.id = "contextMenu";
     var menu = document.createElement('ul');
 
     //Add elements to conext menu
@@ -18,7 +27,7 @@ function createContextMenu(menuElements,coordinates,aSpan){
             var element = document.createElement('li');
             element.innerHTML = menuElement;
             //add a click event to replace the word in the span with a word of the context menu
-            element.onclick = function() {aSpan.innerHTML = i;}
+            element.onclick = function() {aSpan.innerHTML = i;deleteContextMenu();}
             menu.appendChild(element);
         }(menuElement));
 
@@ -31,6 +40,8 @@ function createContextMenu(menuElements,coordinates,aSpan){
 }
 
 window.onload = function(){
+    //delete the context menu if the user clicks anywhere in the page
+    window.onclick = function(){deleteContextMenu();}
     //content editable div where the user writes
     var d = document.getElementById("editor");
     var writing =""; //to save the words the user writes
@@ -54,6 +65,8 @@ window.onload = function(){
             newSpan.innerHTML = writing.substring(0,writing.length);
             //sets a click event in the new created span
             newSpan.onclick = function(evt){
+                if (document.getElementById("contextMenu"))
+                        deleteContextMenu();
                 //the code inside this function handler is not relevant, just text code
                 //var thisContentWords = this.innerHTML.split(" ");
                 //var editorChilds = Array.prototype.slice.call(d.children);
@@ -69,8 +82,8 @@ window.onload = function(){
                 //alert(createContextMenu(["What","The","Fuck"],{x: evt.clientX, y: evt.clientY}).style.left);
                 //alert(createContextMenu(["What","The","Fuck"],{x: evt.clientX, y: evt.clientY}).style.position);
                 //alert(typeof json.parse(h) === String);
-
                 document.getElementById("editor").appendChild(createContextMenu(JSON.parse(suggestions),{x: evt.clientX, y: evt.clientY},this));
+                evt.stopPropagation();
                 //alert(checker.getSuggestions(checker.generateMisspellings(checker.dic),checker.dic,this.innerHTML)
                 //alert(this.innerHTML);
             }

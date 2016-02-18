@@ -5,22 +5,21 @@ to be the one they specified in their data-placeholder attribute. */
 [contentEditable=true]:empty:not(:focus):before{
     content:attr(data-placeholder) }
 
-#container{
-    width : 100%;
-    height : 100%;
-    position: relative;
-}
-#editorContainer{
-    width: 100%;
-    height : 100%;
+/*Context Menu*/
+nav{
     position: absolute;
-    top: 0;
-    left 0;
-}
-#editor{
-    width : 100%;
-    height: 100%;
-    border: 0.4px solid black;
-    font-size: 18px;
     z-index: 10;
+    width: 90px;
+    background-color: #fff;;
+    border: solid 1px #dfdfdf;
+    box-shadow: 1px 1px 2px #cfcfcf;
+}
+
+ul{
+    list-style: none;
+    padding: 0px;
+}
+li:hover{
+    color: #fff;
+    background: #0066aa
 }

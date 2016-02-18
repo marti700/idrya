@@ -24,7 +24,6 @@ function createContextMenu(menuElements,coordinates,aSpan){
 
     menuContainer.appendChild(menu);
     //set the position of the menu;
-    menuContainer.style.position = 'absolute';
     menuContainer.style.left = coordinates.x + "px";
     menuContainer.style.top = coordinates.y + "px";
 

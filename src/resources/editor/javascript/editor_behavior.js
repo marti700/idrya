@@ -65,27 +65,15 @@ window.onload = function(){
             newSpan.innerHTML = writing.substring(0,writing.length);
             //sets a click event in the new created span
             newSpan.onclick = function(evt){
+                //checks if the contextMenu is active in the page if it is
+                //this two line will delete it
                 if (document.getElementById("contextMenu"))
                         deleteContextMenu();
-                //the code inside this function handler is not relevant, just text code
-                //var thisContentWords = this.innerHTML.split(" ");
-                //var editorChilds = Array.prototype.slice.call(d.children);
-                //console.log(this);
-                //console.log(Array.prototype.indexOf.call(d.childNodes,this));
-                //alert(document.body.innerHTML);
+
                 //checker.suggestions returns the spell correction suggestions as a json array
                 var suggestions = checker.suggestions(this.innerHTML);
-                //alert((checker.suggestions(this.innerHTML)).constructor == String);
-                //alert(JSON.stringify(h));
-                //alert(h); //checker is a scala object from idrya.check.spell.SpellChecker
-                //alert(createContextMenu(["What","The","Fuck"],{x: evt.clientX, y: evt.clientY}).style.top);
-                //alert(createContextMenu(["What","The","Fuck"],{x: evt.clientX, y: evt.clientY}).style.left);
-                //alert(createContextMenu(["What","The","Fuck"],{x: evt.clientX, y: evt.clientY}).style.position);
-                //alert(typeof json.parse(h) === String);
                 document.getElementById("editor").appendChild(createContextMenu(JSON.parse(suggestions),{x: evt.clientX, y: evt.clientY},this));
                 evt.stopPropagation();
-                //alert(checker.getSuggestions(checker.generateMisspellings(checker.dic),checker.dic,this.innerHTML)
-                //alert(this.innerHTML);
             }
 
             //if the caret (the blinking thing from where the words suddenly appear)
@@ -110,7 +98,7 @@ window.onload = function(){
                 var writingCopy = writing;
                 //This is triggered when the caret is over a span and the user presses
                 //the space key the timer here is essential because without it the spans
-                //divition (when the user separate a word inside the spans the span will
+                //division (when the user separate a word inside the spans the span will
                 //break in two diferent spans) will happend after the function was executed
                 //which wont allow the creation of span divition.
                 window.setTimeout(function(){
@@ -129,13 +117,6 @@ window.onload = function(){
                     //at this point will be good to remember that the last element of the div will
                     //always be a textNode.
                     d.insertBefore(newSpan,d.childNodes[(Array.prototype.indexOf.call(d.childNodes,getSelectionStart())) + 1]);
-                    //alert("current: "+currentSpan.innerHTML);
-                    //alert("writing: "+writing);
-                    //alert("writing: "+writing.length);
-                    //alert("writingCopy: "+writingCopy);
-                    //alert("writingCopyleng: "+writingCopy.length);
-                    //alert("newSpan: "+newSpan.innerHTML);
-                    //alert("".length);
 
                     if (writingCopy.length === 1)
                         window.getSelection().collapse(currentSpan, currentSpan.innerHTML.length - 1);
@@ -147,7 +128,5 @@ window.onload = function(){
             }
             writing = ""; //cleans the writing variable.
            }
-            //alert(document.body.innerHTML);
-            //alert("Cono pero porque no te imprimes");
     });
 }

@@ -31,7 +31,6 @@ class AddEditEntrySpellCheckerBridge(){
 }
 
 class AddEditEntry extends scalafx.scene.Scene{
-
   //*************************SCREEN CONTROLS*********************************//
   //back and save buttons
   val backbutton = new Button("Go Back")
@@ -45,7 +44,7 @@ class AddEditEntry extends scalafx.scene.Scene{
   val titleTextField = new TextField
   //in this text area goes the content of the entry
   val entryContentWebView = new WebView{
-    engine.load("file:////home/teodoro/Documents/Projects/ScalaProjects/Idrya/src/resources/editor/html/editor.html")
+    engine.load(getClass.getResource("/editor.html").toExternalForm())
     engine.onAlert = (e: WebEvent[_]) => {println(e.data)}
   }
   //prepare entryContentWebView to call scala methods in the context of

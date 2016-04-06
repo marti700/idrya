@@ -80,5 +80,11 @@ package idrya.check.spell {
       val suggestions = write(getSuggestions(generateMisspellings(dic),dic,input))
       suggestions
     }
+
+    def dicToJson():String = {
+      implicit val formats = net.liftweb.json.DefaultFormats
+      write(dic)
+
+    }
   }
 }

@@ -70,9 +70,12 @@ window.onload = function(){
                 if (document.getElementById("contextMenu"))
                         deleteContextMenu();
 
-                //checker.suggestions returns the spell correction suggestions as a json array
-                var suggestions = checker.suggestions(this.innerHTML);
-                document.getElementById("editor").appendChild(createContextMenu(JSON.parse(suggestions),{x: evt.clientX, y: evt.clientY},this));
+                //add the context menu to the editor if the word is misspelled
+                if (JSON.parse(checker.words())[this.innerHTML.replace(" ","")] === undefined){
+                    //checker.suggestions returns the spell correction suggestions as a json array
+                    var suggestions = checker.suggestions(this.innerHTML);
+                    document.getElementById("editor").appendChild(createContextMenu(JSON.parse(suggestions),{x: evt.clientX, y: evt.clientY},this));
+                }
                 evt.stopPropagation();
             }
 

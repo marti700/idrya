@@ -27,6 +27,7 @@ import idrya.check.spell.SpellChecker
 //can comuticate with the SpellChecker
 class AddEditEntrySpellCheckerBridge(){
   val checker = new SpellChecker()
+  def words():String = {checker.dicToJson()}
   def suggestions(aWord:String):String = {checker.suggestionsToJson(aWord)}
 }
 

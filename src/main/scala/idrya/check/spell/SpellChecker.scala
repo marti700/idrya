@@ -58,7 +58,7 @@ package idrya.check.spell {
 
       // generate key with edit distance of 1 and 2 from the provided input
       // to compare then against the dictionary of correct writen words
-      val posiblewords = generateMisspelling(input)
+      val posiblewords = generateMisspelling(input) ++ List(input)
       //list to save spelling suggestions that could come from the correct writen
       //search for suggestions in the correct writen word dictionary
       val suggestions = for(i <- posiblewords if dic.contains(i)) yield(dic(i))

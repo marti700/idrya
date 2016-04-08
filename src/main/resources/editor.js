@@ -27,7 +27,7 @@ function createContextMenu(menuElements,coordinates,aSpan){
             var element = document.createElement('li');
             element.innerHTML = menuElement;
             //add a click event to replace the word in the span with a word of the context menu
-            element.onclick = function() {aSpan.innerHTML = i;deleteContextMenu();}
+            element.onclick = function() {aSpan.innerHTML = i+' ';deleteContextMenu();}
             menu.appendChild(element);
         }(menuElement));
 
@@ -39,6 +39,48 @@ function createContextMenu(menuElements,coordinates,aSpan){
     return menuContainer;
 }
 
+function textWrapper(text){
+    var newSpan = document.createElement('span');
+    newSpan.innerHTML = text;
+    //sets a click event in the new created span
+    newSpan.onclick = function(evt){
+        //checks if the contextMenu is active in the page if it is
+        //this two line will delete it
+        if (document.getElementById("contextMenu"))
+            deleteContextMenu();
+
+        //add the context menu to the editor if the word is misspelled
+        if (JSON.parse(checker.words())[text.replace(" ","")] === undefined){
+            //checker.suggestions returns the spell correction suggestions as a json array
+            alert(text);
+            var suggestions = checker.suggestions(text);
+            alert(suggestions);
+            alert(checker.words());
+            document.getElementById("editor").appendChild(createContextMenu(JSON.parse(suggestions),{x: evt.clientX, y: evt.clientY},this));
+        }
+        evt.stopPropagation();
+    }
+    return newSpan;
+}
+
+function lastWordMeta(text, op){
+    //return the last word in the text or the index of the last word depending
+    //of the value of the op parameter if op = 1 then the last word will be
+    //returned, if m is any other value then the index of the last word will
+    //be returned.
+    var index = 0;
+    var space = 0;
+    for(var i= text.length-1; i>=0; --i){
+        if(text[i] == " " || text[i] == "\t"){
+            space++;
+            if(space == 1)
+                break;
+        }
+        index = i;
+    }
+    return op==1 ? text.substring(index,text.length) : index;
+}
+
 window.onload = function(){
     //delete the context menu if the user clicks anywhere in the page
     window.onclick = function(){deleteContextMenu();}
@@ -46,90 +88,27 @@ window.onload = function(){
     var d = document.getElementById("editor");
     var writing =""; //to save the words the user writes
     d.addEventListener("keypress",function(evt){
-        var lastEl = d.lastChild;
-        var carretControl = "";
-        // if the user press backspace
-        if(evt.which === 8){
-            //delete the last word from the writing variable
-            writing = writing.substring(0, writing.length-1);
-        }
-        else{
-            writing += String.fromCharCode(evt.which);
-        }
-
-        //if the user press space
         if(evt.which == 32){
-            //create a new span
-            var newSpan = document.createElement('span');
-            //set the innerHTML of the span to the value of writing (which has the word the user just wrote)
-            newSpan.innerHTML = writing.substring(0,writing.length);
-            //sets a click event in the new created span
-            newSpan.onclick = function(evt){
-                //checks if the contextMenu is active in the page if it is
-                //this two line will delete it
-                if (document.getElementById("contextMenu"))
-                        deleteContextMenu();
+            //gets the last word of the editor div
+            var lastWord = lastWordMeta(d.innerText,1);
+            //deletes the last word in the editor div
+            //when the user stat writing the first element in the editor div
+            //after the user press space of tab or enter will always be a textNode
+            if (d.lastChild.nodeType == 3)
+                d.lastChild.textContent = "";
+            else
+                //after the first word the last word will be in the last added span
+                d.lastChild.textContent = d.lastChild.textContent.split(' ')[0]+' ';
 
-                //add the context menu to the editor if the word is misspelled
-                if (JSON.parse(checker.words())[this.innerHTML.replace(" ","")] === undefined){
-                    //checker.suggestions returns the spell correction suggestions as a json array
-                    var suggestions = checker.suggestions(this.innerHTML);
-                    document.getElementById("editor").appendChild(createContextMenu(JSON.parse(suggestions),{x: evt.clientX, y: evt.clientY},this));
-                }
-                evt.stopPropagation();
-            }
+            //appends to the editor div what was the last word wrappen in a span
+            d.appendChild(textWrapper(lastWord));
 
-            //if the caret (the blinking thing from where the words suddenly appear)
-            //is not over a span element
-            if (getSelectionStart().nodeName != "SPAN"){
-                //insert the word wraped in the new created span before the last child of the div
-                d.insertBefore(newSpan, d.lastChild);
-                //set the last child text to : '||'
-                //by the way the las child of the content will always be a textNode
-                d.lastChild.textContent = "||";
-
-                //get the position of the carrent
-                //which at this point is right at
-                //the end of the new created span
-                var sel = window.getSelection();
-                //move the caret position 1 character ahead of it current position
-                sel.collapse(d.lastChild, 1);
-            }
-            //if the caret (the blinking thing from where the words suddenly appear)
-            //is over a span
-            else if (getSelectionStart().nodeName == "SPAN"){
-                var writingCopy = writing;
-                //This is triggered when the caret is over a span and the user presses
-                //the space key the timer here is essential because without it the spans
-                //division (when the user separate a word inside the spans the span will
-                //break in two diferent spans) will happend after the function was executed
-                //which wont allow the creation of span divition.
-                window.setTimeout(function(){
-                    //get the text of the span over which the caret is and split it around the spaces
-                    var thisContentWords = getSelectionStart().innerHTML.split(" ");
-                    var currentSpan = getSelectionStart();  //the the span over which the caret is
-                    //var editorChilds = Array.prototype.slice.call(d.childNodes);
-                    //calls indexOf array function over the d.childNodes NodeLIst to get the index of the current span
-                    var wordIndex = Array.prototype.indexOf.call(d.childNodes,getSelectionStart());
-                    //since the user press the space bar in some place of the current span, the current span
-                    //now has two words. the current span will get the first part of the text and the newSpan
-                    //will take the second part of the text
-                    currentSpan.innerHTML = thisContentWords[0]+" ";
-                    newSpan.innerHTML = thisContentWords[1] + " ";
-                    //the newSpan will be inserted before the element that has the caret on it
-                    //at this point will be good to remember that the last element of the div will
-                    //always be a textNode.
-                    d.insertBefore(newSpan,d.childNodes[(Array.prototype.indexOf.call(d.childNodes,getSelectionStart())) + 1]);
-
-                    if (writingCopy.length === 1)
-                        window.getSelection().collapse(currentSpan, currentSpan.innerHTML.length - 1);
-                    else{
-                        window.getSelection().collapse(newSpan, newSpan.innerHTML.length -1);
-                        writingCopy = "";
-                    }
-                },100);
-            }
-            writing = ""; //cleans the writing variable.
-           }
+            //get the position of the carrent
+            //which at this point is right at
+            //the end of the new created span
+            var sel = window.getSelection();
+            //move the caret position 1 character ahead of it current position
+            sel.collapse(d.lastChild, 1);
+        }
     });
 }

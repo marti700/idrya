@@ -81,6 +81,24 @@ function lastWordMeta(text, op){
     return op==1 ? text.substring(index,text.length) : index;
 }
 
+function divideSpan(aSpanElement){
+    //wrap the words of a span in spans and return the wrapped words as an array of spans
+    var words = aSpanElement.innerText.split(" ");
+    return [textWrapper(words[0]+" "),textWrapper(words[1]+ " ")];
+}
+
+function wordsInsertionAndCarretControlAtTail(editor, aWordString){
+    //appends to the editor div what was the last word wrappen in a span
+    editor.appendChild(textWrapper(aWordString));
+
+    //get the position of the carrent
+    //which at this point is right at
+    //the end of the new created span
+    var sel = window.getSelection();
+    //move the caret position 1 character ahead of it current position
+    sel.collapse(editor.lastChild, 1);
+}
+
 window.onload = function(){
     //delete the context menu if the user clicks anywhere in the page
     window.onclick = function(){deleteContextMenu();}
@@ -91,24 +109,38 @@ window.onload = function(){
         if(evt.which == 32){
             //gets the last word of the editor div
             var lastWord = lastWordMeta(d.innerText,1);
+
+            //if the carret is over a span element when the user press space
+            //there will be two words in the span and each word shoulbe in a
+            //individual span, so here the script will wrapp each word in it's
+            //own individual span, then it will remove the span that has the two
+            //words and finilly it will add the new the words wrapped in spans elements
+            if (getSelectionStart().nodeName == "SPAN"){
+                window.setTimeout(function(){
+                    //takes a reference of the current Span element
+                    var currentSpan = getSelectionStart();
+                    console.log(currentSpan);
+                    //get the words wrapped in spans
+                    var newWrappedSpans = divideSpan(currentSpan);
+                    d.insertBefore(newWrappedSpans[0],currentSpan);
+                    d.insertBefore(newWrappedSpans[1],currentSpan);
+                    d.removeChild(currentSpan);
+
+                },200);
+            }
+
             //deletes the last word in the editor div
             //when the user stat writing the first element in the editor div
             //after the user press space of tab or enter will always be a textNode
-            if (d.lastChild.nodeType == 3)
+            else if (d.lastChild.nodeType == 3){
                 d.lastChild.textContent = "";
-            else
+                wordsInsertionAndCarretControlAtTail(d,lastWord);
+            }
+            else{
                 //after the first word the last word will be in the last added span
                 d.lastChild.textContent = d.lastChild.textContent.split(' ')[0]+' ';
-
-            //appends to the editor div what was the last word wrappen in a span
-            d.appendChild(textWrapper(lastWord));
-
-            //get the position of the carrent
-            //which at this point is right at
-            //the end of the new created span
-            var sel = window.getSelection();
-            //move the caret position 1 character ahead of it current position
-            sel.collapse(d.lastChild, 1);
+                wordsInsertionAndCarretControlAtTail(d,lastWord);
+            }
         }
     });
 }

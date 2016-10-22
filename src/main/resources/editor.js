@@ -150,6 +150,10 @@ window.onload = function(){
 
     });
     d.addEventListener("keypress",function(evt){
+        //restst content in case all the words in the editor div were deleted
+        if (d.innerText == "")
+            counter = 0;
+
         writing += String.fromCharCode(evt.charCode);
         alert(writing);
         //saves user input direcly from the
@@ -165,7 +169,12 @@ window.onload = function(){
                 d.appendChild(document.createTextNode("\u00A0"));
                 window.getSelection().collapse(d.lastChild,writing.length);
             }
-
+            //to analyze the first word written by the user
+            else if (counter == 1) {
+                d.childNodes[0].data = "";
+                alert("calling with: "+writing)
+                wordsInsertionAndCarretControlAtTail(d,writing);
+            }
             else if(counter > 1){
                 //at this point this textNode hast two words in it the following line takes out the last word
                 //E.X -> Hello Wolrd after the line down below gets executed the current textNode value will be 'Hello'
